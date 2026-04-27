@@ -11,6 +11,7 @@ import (
 	"github.com/muhamadairul/string-parser-api/app/models/entities"
 	"github.com/muhamadairul/string-parser-api/app/routes"
 	"github.com/muhamadairul/string-parser-api/app/utils/db"
+	"github.com/muhamadairul/string-parser-api/app/utils/parser"
 	"github.com/muhamadairul/string-parser-api/app/utils/server"
 	"github.com/muhamadairul/string-parser-api/configs"
 )
@@ -29,10 +30,17 @@ func main() {
 	}
 	log.Println("Database schema migrated successfully")
 
+	// Load provincial capitals from runtime configuration file
+	capitals, err := parser.LoadCapitals("configs/capitals.json")
+	if err != nil {
+		log.Fatalf("Failed to load capitals config: %v", err)
+	}
+	log.Printf("Loaded %d provincial capitals from config", len(capitals))
+
 	middleware.FiberMiddleware(app)
 
 	routes.PublicRoutes(app)
-	routes.PrivateRoutes(app)
+	routes.PrivateRoutes(app, capitals)
 	routes.NotFoundRoute(app)
 
 	if os.Getenv("STAGE_STATUS") == "dev" {

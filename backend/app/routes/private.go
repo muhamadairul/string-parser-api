@@ -6,9 +6,9 @@ import (
 )
 
 // PrivateRoutes registers API routes.
-func PrivateRoutes(a *fiber.App) {
+func PrivateRoutes(a *fiber.App, capitals map[string]string) {
 	api := a.Group("/api")
 
-	api.Post("/parse", stringparser.Parse)
+	api.Post("/parse", stringparser.ParseHandler(capitals))
 	api.Get("/history", stringparser.History)
 }

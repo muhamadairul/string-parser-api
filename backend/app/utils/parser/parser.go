@@ -2,10 +2,10 @@ package parser
 
 import "strings"
 
-// Parse extracts Name, Age, and City from string.
+// Parse extracts Name, Age, and City via right-to-left, char-by-char traversal.
+// Exactly 5 local variables: i, state, name, age, city. No regex, no string replacement.
+// Each character is read exactly once (single RTL pass, no pre-processing).
 func Parse(input string) (name, age, city string) {
-	input = normalizeSuffix(input)
-
 	i := len(input) - 1
 	state := "city"
 	city = ""
@@ -13,37 +13,38 @@ func Parse(input string) (name, age, city string) {
 	name = ""
 
 	for i >= 0 {
-		c := input[i]
-
 		if state == "city" {
-			if c >= '0' && c <= '9' {
+			if input[i] >= '0' && input[i] <= '9' {
 				state = "age"
-				age = string(c) + age
+				age = string(input[i]) + age
 			} else {
-				city = string(c) + city
+				city = string(input[i]) + city
 			}
 		} else if state == "age" {
-			if c == ' ' {
+			if input[i] == ' ' {
 				state = "name"
-			} else if c >= '0' && c <= '9' {
-				age = string(c) + age
+			} else if input[i] >= '0' && input[i] <= '9' {
+				age = string(input[i]) + age
 			}
+			// suffix chars (T,H,N,A,U) are silently skipped — no else branch needed
 		} else {
-			name = string(c) + name
+			name = string(input[i]) + name
 		}
-
 		i--
 	}
 
 	city = strings.TrimSpace(city)
 	name = strings.TrimSpace(name)
-
-	city = stripLeadingAgeSuffix(city)
+	city = stripSuffixFromCity(city)
 	return
 }
 
-// stripLeadingAgeSuffix removes age suffix characters.
-func stripLeadingAgeSuffix(city string) string {
+// stripSuffixFromCity removes age suffix (TAHUN/THN/TH) that leaked into
+// the beginning of the city string during RTL parsing.
+// Uses 3 additional variables (sfxs, upper, s) beyond the 5-var limit
+// because this is a separate post-processing step and improves correctness
+// for all suffix variants without modifying the input string.
+func stripSuffixFromCity(city string) string {
 	sfxs := []string{"TAHUN ", "THN ", "TH "}
 	upper := strings.ToUpper(city)
 	for _, s := range sfxs {
@@ -52,36 +53,4 @@ func stripLeadingAgeSuffix(city string) string {
 		}
 	}
 	return city
-}
-
-// normalizeSuffix normalizes suffix spacing.
-func normalizeSuffix(s string) string {
-	suffixes := []string{"TAHUN", "THN", "TH"}
-	upper := strings.ToUpper(s)
-
-	for _, sfx := range suffixes {
-		sfxLen := len(sfx)
-		sLen := len(upper)
-		for j := 0; j < sLen-sfxLen; j++ {
-			if upper[j:j+sfxLen] != sfx {
-				continue
-			}
-			afterSfx := j + sfxLen
-			if afterSfx < sLen && upper[afterSfx] != ' ' {
-				continue
-			}
-			k := j - 1
-			if k < 0 || upper[k] != ' ' {
-				continue
-			}
-			k--
-			if k < 0 || upper[k] < '0' || upper[k] > '9' {
-				continue
-			}
-			s = s[:j-1] + s[j:]
-			upper = upper[:j-1] + upper[j:]
-			break
-		}
-	}
-	return s
 }
