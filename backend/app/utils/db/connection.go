@@ -13,7 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Query is the global GORM database instance.
+// Query is the global GORM instance.
 var Query *gorm.DB
 
 func setCreatedAt(db *gorm.DB) {
@@ -51,13 +51,13 @@ func setUpdatedAt(db *gorm.DB) {
 	}
 }
 
-// EnableGlobalTimestamps registers GORM callbacks for auto timestamps.
+// EnableGlobalTimestamps enables auto timestamps.
 func EnableGlobalTimestamps(db *gorm.DB) {
 	db.Callback().Create().Before("gorm:create").Register("global:set_created_at", setCreatedAt)
 	db.Callback().Update().Before("gorm:update").Register("global:set_updated_at", setUpdatedAt)
 }
 
-// OpenDBConnection opens and returns a GORM PostgreSQL connection.
+// OpenDBConnection returns a DB connection.
 func OpenDBConnection() (*gorm.DB, error) {
 	var err error
 

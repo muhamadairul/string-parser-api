@@ -4,14 +4,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Response is the standard API response structure.
+// Response is the API response structure.
 type Response struct {
 	Status  string      `json:"status"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
 }
 
-// ResponseSuccess sends a 200 OK JSON response.
+// ResponseSuccess sends a 200 OK.
 func ResponseSuccess(c *fiber.Ctx, data interface{}, message string) error {
 	if message == "" {
 		message = "Berhasil mendapatkan data!"
@@ -23,7 +23,7 @@ func ResponseSuccess(c *fiber.Ctx, data interface{}, message string) error {
 	})
 }
 
-// ResponseBadRequest sends a 400 Bad Request JSON response.
+// ResponseBadRequest sends a 400.
 func ResponseBadRequest(c *fiber.Ctx, message string) error {
 	if message == "" {
 		message = "Request tidak valid!"
@@ -34,7 +34,7 @@ func ResponseBadRequest(c *fiber.Ctx, message string) error {
 	})
 }
 
-// ResponseError sends a 500 Internal Server Error JSON response.
+// ResponseError sends a 500.
 func ResponseError(c *fiber.Ctx, message string) error {
 	if message == "" {
 		message = "Maaf, terjadi kesalahan server!"
@@ -45,7 +45,7 @@ func ResponseError(c *fiber.Ctx, message string) error {
 	})
 }
 
-// ResponseNotFound sends a 404 Not Found JSON response.
+// ResponseNotFound sends a 404.
 func ResponseNotFound(c *fiber.Ctx, message string) error {
 	if message == "" {
 		message = "Data tidak ditemukan!"

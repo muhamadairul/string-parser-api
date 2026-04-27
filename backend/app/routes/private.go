@@ -5,7 +5,7 @@ import (
 	stringparser "github.com/muhamadairul/string-parser-api/app/controllers/string-parser"
 )
 
-// PrivateRoutes registers API routes for the string parser.
+// PrivateRoutes registers API routes.
 func PrivateRoutes(a *fiber.App) {
 	api := a.Group("/api")
 

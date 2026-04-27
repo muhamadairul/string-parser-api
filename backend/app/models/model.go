@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Model is the base model embedded in all entities.
+// Model is the base model.
 type Model struct {
 	CreatedAt time.Time      `gorm:"default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time      `gorm:"default:current_timestamp" json:"updated_at"`

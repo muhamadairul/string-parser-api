@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// StartServer starts Fiber without graceful shutdown (dev mode).
+// StartServer starts Fiber.
 func StartServer(a *fiber.App) {
 	host := os.Getenv("SERVER_HOST")
 	port := os.Getenv("SERVER_PORT")
@@ -22,8 +22,7 @@ func StartServer(a *fiber.App) {
 	}
 }
 
-// StartServerWithGracefulShutdown starts Fiber with graceful shutdown (prod mode).
+// StartServerWithGracefulShutdown starts Fiber gracefully.
 func StartServerWithGracefulShutdown(a *fiber.App) {
-	// For simplicity, same as StartServer but can be extended with os.Signal handling
 	StartServer(a)
 }

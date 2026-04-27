@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// FiberConfig func for configuration Fiber app.
+// FiberConfig returns Fiber config.
 func FiberConfig() fiber.Config {
 	readTimeoutSecondsCount, _ := strconv.Atoi(os.Getenv("SERVER_READ_TIMEOUT"))
 

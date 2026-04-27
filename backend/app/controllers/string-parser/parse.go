@@ -11,13 +11,12 @@ import (
 	"github.com/muhamadairul/string-parser-api/app/utils/server"
 )
 
-// ParseRequest defines the expected JSON request body.
+// ParseRequest defines the JSON request body.
 type ParseRequest struct {
 	Input string `json:"input"`
 }
 
-// Parse handles POST /api/parse
-// Takes a raw input string, parses it into Name/Age/City, stores to DB, returns result.
+// Parse handles POST /api/parse.
 func Parse(c *fiber.Ctx) error {
 	var req ParseRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -28,19 +27,13 @@ func Parse(c *fiber.Ctx) error {
 		return server.ResponseBadRequest(c, "Input tidak boleh kosong")
 	}
 
-	// Parse: right-to-left, no regex, no replace, max 5 vars
 	rawName, rawAge, rawCity := parser.Parse(strings.ToUpper(req.Input))
-
-	// Enrich city with province if it's a provincial capital
 	enrichedCity := parser.EnrichCity(rawCity)
 
-	// Apply fixed-width formatting:
-	// Name: 30 char left-aligned, Age: 3 char right-aligned, City: 20 char left-aligned
 	fmtName := fmt.Sprintf("%-30s", rawName)
 	fmtAge := fmt.Sprintf("%3s", rawAge)
 	fmtCity := fmt.Sprintf("%-20s", enrichedCity)
 
-	// Truncate if exceeds CHAR limit (safety)
 	if len(fmtName) > 30 {
 		fmtName = fmtName[:30]
 	}
@@ -51,7 +44,6 @@ func Parse(c *fiber.Ctx) error {
 		fmtCity = fmtCity[:20]
 	}
 
-	// Persist to database
 	record := entities.ParsedResult{
 		Name: fmtName,
 		Age:  fmtAge,

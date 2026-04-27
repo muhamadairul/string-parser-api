@@ -7,8 +7,7 @@ import (
 	"github.com/muhamadairul/string-parser-api/app/utils/server"
 )
 
-// History handles GET /api/history
-// Returns the 20 most recent parsed results from the database.
+// History handles GET /api/history.
 func History(c *fiber.Ctx) error {
 	var results []entities.ParsedResult
 	if err := db.Query.Order("created_at DESC").Limit(20).Find(&results).Error; err != nil {

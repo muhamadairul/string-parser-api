@@ -14,6 +14,13 @@ interface Props {
   onHistoryRefresh: () => void;
 }
 
+const EXAMPLES = [
+  "CUT MINI 28 BANDA ACEH",
+  "BUDI SANTOSO 35THN SURABAYA",
+  "SITI RAHAYU 22TH JAKARTA",
+  "AHMAD YANI 40 TAHUN MAKASSAR",
+];
+
 export default function InputForm({ onResult, onHistoryRefresh }: Props) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +28,7 @@ export default function InputForm({ onResult, onHistoryRefresh }: Props) {
 
   const handleParse = async () => {
     if (!input.trim()) {
-      setError("Input tidak boleh kosong!");
+      setError("Input tidak boleh kosong.");
       return;
     }
     setError("");
@@ -39,81 +46,41 @@ export default function InputForm({ onResult, onHistoryRefresh }: Props) {
       onResult(json.data);
       onHistoryRefresh();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Terjadi kesalahan";
-      setError(message);
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleParse();
-    }
-  };
-
-  const examples = [
-    "CUT MINI 28 BANDA ACEH",
-    "BUDI SANTOSO 35THN SURABAYA",
-    "SITI RAHAYU 22TH JAKARTA",
-    "AHMAD YANI 40 TAHUN MAKASSAR",
-  ];
-
   return (
-    <div className="input-form-card">
-      <div className="form-header">
-        <div className="form-icon">⚡</div>
-        <div>
-          <h2 className="form-title">String Parser</h2>
-          <p className="form-subtitle">Masukkan string dengan format: NAMA UMUR KOTA</p>
-        </div>
-      </div>
-
-      <div className="input-group">
+    <div className="card">
+      <label className="label" htmlFor="parse-input">Input string</label>
+      <div className="input-row">
         <input
           id="parse-input"
           type="text"
-          className={`parse-input ${error ? "input-error" : ""}`}
+          className={`text-input${error ? " text-input--error" : ""}`}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onKeyDown={(e) => e.key === "Enter" && handleParse()}
           placeholder="Contoh: CUT MINI 28 BANDA ACEH"
           autoComplete="off"
           spellCheck={false}
         />
-        <button
-          id="parse-btn"
-          className={`parse-btn ${loading ? "loading" : ""}`}
-          onClick={handleParse}
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="spinner" />
-          ) : (
-            <>
-              <span>Parse</span>
-              <span className="btn-arrow">→</span>
-            </>
-          )}
+        <button className="btn-primary" onClick={handleParse} disabled={loading}>
+          {loading ? "..." : "Parse"}
         </button>
       </div>
 
-      {error && <p className="error-msg">⚠ {error}</p>}
+      {error && <p className="error-text">{error}</p>}
 
-      <div className="examples-section">
-        <p className="examples-label">Coba contoh:</p>
-        <div className="examples-list">
-          {examples.map((ex) => (
-            <button
-              key={ex}
-              className="example-chip"
-              onClick={() => setInput(ex)}
-            >
-              {ex}
-            </button>
-          ))}
-        </div>
+      <div className="examples">
+        <span className="examples-label">Contoh:</span>
+        {EXAMPLES.map((ex) => (
+          <button key={ex} className="chip" onClick={() => setInput(ex)}>
+            {ex}
+          </button>
+        ))}
       </div>
     </div>
   );

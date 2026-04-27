@@ -52,37 +52,35 @@ export default function HistoryTable({ refreshTrigger }: Props) {
   };
 
   return (
-    <div className="history-card">
+    <div className="card">
       <div className="history-header">
-        <div className="history-title-row">
-          <h3 className="history-title">🗂 Parse History</h3>
-          <span className="history-count">{history.length} records</span>
+        <span className="history-title">History</span>
+        <div className="history-meta">
+          <span className="history-count">{history.length} record</span>
+          <button className="btn-ghost" onClick={fetchHistory} disabled={loading}>
+            {loading ? "..." : "Refresh"}
+          </button>
         </div>
-        <button className="refresh-btn" onClick={fetchHistory} disabled={loading}>
-          {loading ? "⟳" : "↻"} Refresh
-        </button>
       </div>
 
       {history.length === 0 && !loading ? (
-        <div className="history-empty">
-          <p>Belum ada data. Coba parse string pertama kamu!</p>
-        </div>
+        <p className="empty-text">Belum ada data.</p>
       ) : (
         <div className="table-wrapper">
-          <table className="history-table">
+          <table className="data-table">
             <thead>
               <tr>
                 <th>#</th>
-                <th>NAME (30)</th>
-                <th>AGE (3)</th>
-                <th>CITY (20)</th>
-                <th>WAKTU</th>
+                <th>Name (30)</th>
+                <th>Age (3)</th>
+                <th>City (20)</th>
+                <th>Waktu</th>
               </tr>
             </thead>
             <tbody>
               {history.map((item, idx) => (
-                <tr key={item.id} className="table-row">
-                  <td className="td-id">{idx + 1}</td>
+                <tr key={item.id}>
+                  <td className="td-num">{idx + 1}</td>
                   <td className="td-mono">{item.name.trim()}</td>
                   <td className="td-mono td-center">{item.age.trim()}</td>
                   <td className="td-mono">{item.city.trim()}</td>

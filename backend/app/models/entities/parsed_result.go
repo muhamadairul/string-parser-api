@@ -2,8 +2,7 @@ package entities
 
 import "github.com/muhamadairul/string-parser-api/app/models"
 
-// ParsedResult represents a parsed string record stored in the database.
-// Name: CHAR(30), Age: CHAR(3), City: CHAR(20) — fixed-width as per requirements.
+// ParsedResult is the parsed string DB record.
 type ParsedResult struct {
 	ID   uint   `gorm:"primarykey" json:"id"`
 	Name string `gorm:"type:char(30);not null" json:"name"`

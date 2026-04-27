@@ -5,7 +5,7 @@ import (
 	"github.com/muhamadairul/string-parser-api/app/utils/server"
 )
 
-// NotFoundRoute registers a 404 catch-all route.
+// NotFoundRoute registers 404 route.
 func NotFoundRoute(a *fiber.App) {
 	a.Use(func(c *fiber.Ctx) error {
 		return server.ResponseNotFound(c, "Route tidak ditemukan")

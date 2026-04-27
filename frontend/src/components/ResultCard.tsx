@@ -14,78 +14,45 @@ interface Props {
 export default function ResultCard({ result }: Props) {
   if (!result) {
     return (
-      <div className="result-card result-empty">
-        <div className="empty-icon">🔍</div>
-        <p className="empty-text">Hasil parsing akan muncul di sini</p>
-        <p className="empty-sub">Masukkan string dan klik Parse</p>
+      <div className="card card--muted">
+        <p className="empty-text">Hasil parsing akan muncul di sini.</p>
       </div>
     );
   }
 
-  const fields = [
-    {
-      label: "NAME",
-      value: result.raw.name,
-      fmtValue: result.name,
-      icon: "👤",
-      color: "blue",
-      width: 30,
-    },
-    {
-      label: "AGE",
-      value: result.raw.age,
-      fmtValue: result.age,
-      icon: "🎂",
-      color: "purple",
-      width: 3,
-    },
-    {
-      label: "CITY",
-      value: result.raw.city,
-      fmtValue: result.city,
-      icon: "🏙️",
-      color: "teal",
-      width: 20,
-    },
-  ];
-
   return (
-    <div className="result-card result-success">
+    <div className="card">
       <div className="result-header">
-        <span className="result-badge">✓ Parsed</span>
-        <span className="result-id">ID #{result.id}</span>
+        <span className="result-title">Hasil parse</span>
+        <span className="result-id">#{result.id}</span>
       </div>
 
-      <div className="result-fields">
-        {fields.map((f) => (
-          <div key={f.label} className={`field-row field-${f.color}`}>
-            <div className="field-icon">{f.icon}</div>
-            <div className="field-content">
-              <div className="field-label">{f.label}</div>
-              <div className="field-value">{f.value || "—"}</div>
-              <div className="field-meta">
-                <span className="field-fmt-label">fixed({f.width})</span>
-                <code className="field-fmt-value">&ldquo;{f.fmtValue}&rdquo;</code>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="result-raw">
-        <p className="raw-label">📋 Fixed-Width Output</p>
-        <pre className="raw-block">
-          <span className="raw-line">
-            <span className="raw-key">NAME</span> : &ldquo;{result.name}&rdquo;
-          </span>
-          <span className="raw-line">
-            <span className="raw-key">AGE </span> : &ldquo;{result.age}&rdquo;
-          </span>
-          <span className="raw-line">
-            <span className="raw-key">CITY</span> : &ldquo;{result.city}&rdquo;
-          </span>
-        </pre>
-      </div>
+      <table className="result-table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Value</th>
+            <th>Fixed-width ({`char`})</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>{result.raw.name || "—"}</td>
+            <td><code>&ldquo;{result.name}&rdquo;</code></td>
+          </tr>
+          <tr>
+            <td>Age</td>
+            <td>{result.raw.age || "—"}</td>
+            <td><code>&ldquo;{result.age}&rdquo;</code></td>
+          </tr>
+          <tr>
+            <td>City</td>
+            <td>{result.raw.city || "—"}</td>
+            <td><code>&ldquo;{result.city}&rdquo;</code></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
